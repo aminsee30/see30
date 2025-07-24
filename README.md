@@ -1,16 +1,20 @@
-## Hi there 👋
+# 👋 Welcome to see30
 
-<!--
-**see30/see30** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square)
+![Learning](https://img.shields.io/badge/Learning-Always-orange?style=flat-square)
 
-Here are some ideas to get you started:
+---
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+**About:**  
+🚀 Building cool projects  
+🌱 Always learning  
+💬 Open to collaboration
+
+**Tech:**  
+![JavaScript](https://img.shields.io/badge/-JavaScript-black?style=flat-square&logo=javascript)
+![Python](https://img.shields.io/badge/-Python-3776AB?style=flat-square&logo=python)
+
+---
+
+**Contact:**  
+[Email](mailto:your.email@example.com) | [LinkedIn](https://linkedin.com/in/yourprofile)

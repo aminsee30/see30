@@ -1,19 +1,29 @@
-# 👋 Welcome to see30
+<pre>
+<b>$</b> whois amin-gholami
+</pre>
+<blockquote>
+<pre>
+{
+  "name": "Amin Gholami",
+  "title": "Senior Product Designer",
+  "mission": "I translate complex user needs into clear, buildable product roadmaps. 
+             My goal is to create intuitive UIs that developers love to build and
+             users love to use.",
 
-![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square)
-![Learning](https://img.shields.io/badge/Learning-Always-orange?style=flat-square)
+  "coreStack": [
+    "UX Strategy",
+    "Scalable Design Systems",
+    "Data-Informed Design",
+    "Agile Methodologies"
+  ],
 
----
-
-**About:**  
-🚀 Building cool projects  
-🌱 Always learning  
-💬 Open to collaboration
+  "status": "Open to collaborating on high-impact products.",
   
-![Design](https://avatars.githubusercontent.com/u/5155369?s=200&v=4)
-![Python](https://img.shields.io/badge/-Python-3776AB?style=flat-square&logo=python)
-
----
-
-**Contact:**  
-[Email](mailto:amingholamisee@gmail.com) | [LinkedIn](https://linkedin.com/in/amin-gholami)
+  "links": {
+    "portfolio": "YOUR_GITHUB_PAGES_LINK",
+    "linkedin": "https://linkedin.com/in/amin-gholami",
+    "email": "mailto:amingholamisee@gmail.com"
+  }
+}
+</pre>
+</blockquote>

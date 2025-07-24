@@ -11,7 +11,7 @@
 💬 Open to collaboration
 
 **Tech:**  
-![Design](https://spin.atomicobject.com/wp-content/uploads/Figma-Image.jpg)
+![Design](https://images.app.goo.gl/UyShU)
 ![Python](https://img.shields.io/badge/-Python-3776AB?style=flat-square&logo=python)
 
 ---

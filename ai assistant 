@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دستیار صوتی هوش مصنوعی با Gemini</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- استایل‌های اصلی --- */
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Vazirmatn', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .voice-assistant-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            padding: 2rem;
+            width: 90%;
+            max-width: 700px;
+        }
+
+        /* --- استایل لوگو و انیمیشن --- */
+        .logo-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-container:hover {
+            transform: scale(1.05);
+        }
+
+        .swirl {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            /* انیمیشن چرخش */
+            animation-name: rotate-animation;
+            animation-duration: 20s;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+            /* حالت اولیه انیمیشن متوقف است */
+            animation-play-state: paused; 
+        }
+        
+        /* کلاس 'listening' برای شروع انیمیشن */
+        .swirl.listening {
+            animation-play-state: running;
+        }
+
+        .plant {
+            width: 120px; /* اندازه جوانه مرکزی */
+            height: auto;
+            position: relative;
+            z-index: 10;
+            /* افکت درخشش نئونی برای جوانه */
+            filter: drop-shadow(0 0 5px #00ff7f) drop-shadow(0 0 15px #00ff7f);
+            transition: filter 0.5s ease-in-out;
+        }
+
+        /* درخشش بیشتر هنگام گوش دادن */
+        .plant.listening {
+             filter: drop-shadow(0 0 10px #39ff14) drop-shadow(0 0 30px #39ff14) drop-shadow(0 0 50px #39ff14);
+        }
+
+        /* تعریف انیمیشن چرخش */
+        @keyframes rotate-animation {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* --- استایل بخش متن و وضعیت --- */
+        .status-container {
+            height: 50px; /* فضای ثابت برای متن وضعیت */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .status {
+            color: #999;
+            font-size: 1.1rem;
+            transition: color 0.3s ease, font-size 0.3s ease;
+        }
+
+        .status.listening-text {
+            color: #00ff7f;
+            font-size: 1.3rem;
+        }
+        
+        .status.processing-text {
+            color: #00bfff; /* Deep sky blue */
+            font-size: 1.3rem;
+        }
+
+        .transcript-container {
+            margin-top: 1rem;
+            width: 100%;
+            min-height: 100px; /* فضای ثابت برای متن */
+            padding: 1rem;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 127, 0.2);
+            box-shadow: 0 0 15px rgba(0, 255, 127, 0.1);
+            text-align: right;
+        }
+
+        .transcript-container p {
+            margin: 0;
+            line-height: 1.7;
+        }
+        
+        .user-text {
+            color: #ffffff;
+            font-weight: 400;
+        }
+
+        .ai-response {
+            color: #39ff14; /* Neon green */
+            font-weight: 700;
+            margin-top: 0.8rem;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="voice-assistant-container">
+        <div class="logo-container" id="logoContainer">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAASFBMVEX///8AAADa2trMzMzd3d3V1dXi4uLo6OjT09P6+vrz8/P19fXm5ubDw8OysrLa2tqkpKS/v7/Ozs6Li4ugoKCfn5+Hh4eRkZF+pA0gAAABtElEQVR4nO3dy27CMBBA0WArYFNqAynvf9uFFRZbkja1jGQu/79C1LBY2kIHAAAAAAAAAAAAAAAAAAD/V6/X39dfNn89f33+s3zUfP75fHDf4aM1hmuVcq1Sr1Wa319v2D1P13l2un/eO6/VmqZ1TNN6puu8VmuapnWcU8uZdU7Ncq7Ncq7VcqaVTGcqmVYys5gqZjFVzCar2WYzs5gqZjHVDCtz1aycK9eqWblWrauYq1ZdzVzNWs2szVzN2syazczNrMmsyczNrEmsyszNrEnsyszNrEnsyszNrEmsyczNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEnsyszNrEms+sX/g/wIAAAAAAAAAAAAAAAAAb/AGjLwQyy7VfJAAAAAASUVORK5CYII=" class="swirl" id="swirlElement" alt="listening-indicator">
+            <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxAHBgYIBw0IBw0HBw0HBw0HDQ8IDQcNFREWFhURExMYHSggGBolGxMVITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OGxAQGy4mICYuMi0vMi0yLi0tLy0vLi0tLy0vNS8vLS0tLS0tLS0tLS0tLy0tLS0tLS0tLS0tLS0tLf/AABEIAO4A7gMBIgACEQEDEQH/xAAcAAEAAwEAAwEAAAAAAAAAAAAABQYHBAMCAQj/xAA/EAABAwIEAwQGBwcEAwAAAAABAAIDBBEFEiEGMUETIlFhcYEHkaGxssEUMkJScoKy0eEWJDNDU3OCkvDxU//EABQBAQAAAAAAAAAAAAAAAAAAAAD/xAABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/APcUREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQ... " id="plantElement" class="plant" alt="ai-logo">
+        </div>
+
+        <div class="status-container">
+            <p id="statusText" class="status">برای شروع روی لوگو کلیک کنید</p>
+        </div>
+
+        <div class="transcript-container" id="transcriptContainer">
+            <p id="transcriptOutput"></p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- شناسایی API های مرورگر ---
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const speechSynthesis = window.speechSynthesis;
+
+            if (!SpeechRecognition) {
+                alert("متاسفانه مرورگر شما از قابلیت تشخیص گفتار پشتیبانی نمی‌کند.");
+                return;
+            }
+             if (!speechSynthesis) {
+                console.warn("مرورگر شما از قابلیت گفتار سنتزی پشتیبانی نمی‌کند.");
+            }
+
+            // --- گرفتن عناصر از DOM ---
+            const logoContainer = document.getElementById('logoContainer');
+            const swirlElement = document.getElementById('swirlElement');
+            const plantElement = document.getElementById('plantElement');
+            const statusText = document.getElementById('statusText');
+            const transcriptOutput = document.getElementById('transcriptOutput');
+
+            // --- تنظیمات تشخیص گفتار ---
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'fa-IR';
+            recognition.interimResults = false;
+            recognition.continuous = false;
+
+            let isListening = false;
+
+            // --- شروع و توقف گوش دادن ---
+            logoContainer.addEventListener('click', () => {
+                if (!isListening) {
+                    try {
+                        recognition.start();
+                    } catch (error) {
+                         console.error("خطا در شروع تشخیص گفتار:", error);
+                         statusText.textContent = "خطا! دوباره تلاش کنید.";
+                    }
+                } else {
+                    recognition.stop();
+                }
+            });
+
+            // --- رویدادهای مربوط به تشخیص گفتار ---
+            recognition.onstart = () => {
+                isListening = true;
+                statusText.textContent = "در حال گوش دادن...";
+                statusText.className = "status listening-text";
+                swirlElement.classList.add('listening');
+                plantElement.classList.add('listening');
+                transcriptOutput.innerHTML = ''; // پاک کردن متن قبلی
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                displayUserTranscript(transcript);
+                processCommand(transcript); // ارسال متن به Gemini
+            };
+            
+            recognition.onerror = (event) => {
+                console.error("خطای تشخیص گفتار:", event.error);
+                let errorMessage = "خطا! دوباره روی لوگو کلیک کنید.";
+                if (event.error === 'no-speech') {
+                    errorMessage = "صدایی تشخیص داده نشد. دوباره تلاش کنید.";
+                } else if (event.error === 'not-allowed') {
+                    errorMessage = "اجازه دسترسی به میکروفون داده نشد.";
+                }
+                statusText.textContent = errorMessage;
+                statusText.className = "status";
+            };
+
+            recognition.onend = () => {
+                isListening = false;
+                if(statusText.className.includes("listening-text")) {
+                    statusText.textContent = "برای شروع روی لوگو کلیک کنید";
+                    statusText.className = "status";
+                }
+                swirlElement.classList.remove('listening');
+                plantElement.classList.remove('listening');
+            };
+            
+            // --- توابع کمکی ---
+            function displayUserTranscript(text) {
+                transcriptOutput.innerHTML = `<p class="user-text">شما: ${text}</p>`;
+            }
+
+            function displayAiResponse(text) {
+                transcriptOutput.innerHTML += `<p class="ai-response">دستیار: ${text}</p>`;
+                statusText.textContent = "برای شروع روی لوگو کلیک کنید";
+                statusText.className = "status";
+                speak(text); // خواندن پاسخ با صدای بلند
+            }
+            
+            function speak(text) {
+                if (speechSynthesis) {
+                    // توقف هرگونه گفتار قبلی
+                    speechSynthesis.cancel();
+                    
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'fa-IR';
+                    utterance.rate = 1.0; // سرعت خواندن
+                    speechSynthesis.speak(utterance);
+                }
+            }
+
+            /**
+             * پردازش دستور با استفاده از Gemini API
+             * @param {string} command - متن گفته شده توسط کاربر
+             */
+            async function processCommand(command) {
+                statusText.textContent = "در حال پردازش...";
+                statusText.className = "status processing-text";
+
+                const apiKey = ""; // کلید API شما در اینجا قرار می‌گیرد
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                // دستورالعمل برای مدل که به فارسی پاسخ دهد
+                const prompt = `شما یک دستیار هوشمند و دوستانه هستید. به سوال زیر به زبان فارسی پاسخ کوتاه و مفیدی بده: "${command}"`;
+
+                const payload = {
+                    contents: [{
+                        parts: [{ text: prompt }]
+                    }]
+                };
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`خطای شبکه: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    
+                    if (result.candidates && result.candidates.length > 0) {
+                        const aiText = result.candidates[0].content.parts[0].text;
+                        displayAiResponse(aiText);
+                    } else {
+                        throw new Error("پاسخ معتبری از API دریافت نشد.");
+                    }
+
+                } catch (error) {
+                    console.error("خطا در ارتباط با Gemini API:", error);
+                    const errorMessage = "متاسفانه در پردازش درخواست شما مشکلی پیش آمد.";
+                    displayAiResponse(errorMessage);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 [![Typing SVG](https://readme-typing-svg.demolab.com?font=Montserrat&weight=500&pause=2000&color=F51500&width=435&lines=%F0%9F%91%8B+HI%2C+I'M+AMIN+GHOLAMI+!)](https://git.io/typing-svg)
 
 ```bash
-amin-gholami@github:~$ ./start-collaboration.sh
+amin-gholamiCHAMANI@github:~$ ./start-collaboration.sh
 
 [BOOTING]  Initializing DesignCore v4.0...
 [PROCESS]  Loading modules: [Strategy, UX, UI, Systems]
